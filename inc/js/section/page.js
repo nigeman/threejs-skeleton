@@ -20,6 +20,7 @@ SITE.Page = (function(){
 
 		this.light = null;
 		this.camera = null;
+		this.controls = null;
 
 		$.extend(this.options, options);
 
@@ -64,14 +65,23 @@ SITE.Page = (function(){
 			// add Scene Events
 			this.addSceneEvents();
 
+			// create Controls
+			this.addSceneControls();
+
 			// draw Scene
 			this.renderer.shadowMapEnabled = true;
 			this.renderer.shadowMapSoft = true;
-			this.renderScene(100);
+			this.renderScene(26);
 		},
 
 		addSceneEvents: function(){
 
+		},
+
+		addSceneControls: function(){
+			this.controls = new THREE.OrbitControls(this.camera);
+
+			this.controls.addEventListener('change', this.renderScene);
 		},
 
 		renderScene: function(fps){
@@ -79,6 +89,8 @@ SITE.Page = (function(){
 
 			setTimeout(function() {
 				requestAnimationFrame(_this.renderScene.bind(_this));
+
+				_this.controls.update();
 				_this.mainScene.simulate();
 				_this.renderer.render(_this.mainScene, _this.camera);
 			}, 1000 / fps);
@@ -91,6 +103,8 @@ SITE.Page = (function(){
 			this.light.position.z = 110;
 			this.light.shadowDarkness = 0.5;
 			this.light.castShadow = true;
+			this.light.shadowCameraBottom = -200;
+			this.light.shadowCameraVisible = true;
 
 			this.mainScene.add(this.light);
 		},
@@ -102,6 +116,16 @@ SITE.Page = (function(){
 					color: 0x03740d,
 					overdraw: true
 				}),
+				0.6, // medium friction
+				1.1 // bouncy restitution
+			);
+
+			this.materials.sphereTwo = Physijs.createMaterial(
+				new THREE.MeshLambertMaterial(
+					{
+						color: 0x03740d,
+						overdraw: true
+					}),
 				0.6, // medium friction
 				1.1 // bouncy restitution
 			);
@@ -149,6 +173,10 @@ SITE.Page = (function(){
 				new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS),
 				this.materials.sphere);
 
+			this.geometry.sphereTwo = new Physijs.SphereMesh(
+				new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS),
+				this.materials.sphereTwo);
+
 			this.geometry.plane = new Physijs.BoxMesh(
 				new THREE.PlaneGeometry(4000, 4000, 122, 122),
 				this.materials.plane);
@@ -164,7 +192,13 @@ SITE.Page = (function(){
 			this.geometry.sphere.position.y = 200;
 			this.geometry.sphere.castShadow = true;
 
+			//Set SphereTwo properties
+			this.geometry.sphereTwo.position.y = 300;
+			this.geometry.sphereTwo.position.x = 50;
+			this.geometry.sphereTwo.castShadow = true;
+
 			this.mainScene.add(this.geometry.sphere);
+			this.mainScene.add(this.geometry.sphereTwo);
 			this.mainScene.add(this.geometry.plane);
 		}
 	}
