@@ -146,12 +146,10 @@ LESS mixins by Chris Krupski
 
 // Box shadow
 
-.box-shadow(@shadowA, @shadowB:X, ...){
-  // Multiple shadow solution from http://toekneestuck.com/blog/2012/05/15/less-css-arguments-variable/
-  @props: ~`"@{arguments}".replace(/[\[\]]|\,\sX/g, '')`;
-  -webkit-box-shadow: @props;
-     -moz-box-shadow: @props;
-          box-shadow: @props;
+.box-shadow(@shadow) {
+  -webkit-box-shadow: @shadow;
+	 -moz-box-shadow: @shadow;
+		  box-shadow: @shadow;
 }
 
 
@@ -168,30 +166,30 @@ LESS mixins by Chris Krupski
 // Border Radius
 .border-radius(@radius) {
   -webkit-border-radius: @radius;
-     -moz-border-radius: @radius;
-          border-radius: @radius;
+	 -moz-border-radius: @radius;
+		  border-radius: @radius;
 }
 
 // Single Corner Border Radius
 .border-top-left-radius(@radius) {
   -webkit-border-top-left-radius: @radius;
-      -moz-border-radius-topleft: @radius;
-          border-top-left-radius: @radius;
+	  -moz-border-radius-topleft: @radius;
+		  border-top-left-radius: @radius;
 }
 .border-top-right-radius(@radius) {
   -webkit-border-top-right-radius: @radius;
-      -moz-border-radius-topright: @radius;
-          border-top-right-radius: @radius;
+	  -moz-border-radius-topright: @radius;
+		  border-top-right-radius: @radius;
 }
 .border-bottom-right-radius(@radius) {
   -webkit-border-bottom-right-radius: @radius;
-      -moz-border-radius-bottomright: @radius;
-          border-bottom-right-radius: @radius;
+	  -moz-border-radius-bottomright: @radius;
+		  border-bottom-right-radius: @radius;
 }
 .border-bottom-left-radius(@radius) {
   -webkit-border-bottom-left-radius: @radius;
-      -moz-border-radius-bottomleft: @radius;
-          border-bottom-left-radius: @radius;
+	  -moz-border-radius-bottomleft: @radius;
+		  border-bottom-left-radius: @radius;
 }
 
 // Single Side Border Radius
@@ -411,7 +409,7 @@ LESS mixins by Chris Krupski
 			perspective-origin: @values;
 }
 
-.transform-origin (@x: 50%, @y: 50%, @z: 0) {
+.transform-origin (@arguments) {
 	-webkit-transform-origin: @arguments;
 	   -moz-transform-origin: @arguments;
 		-ms-transform-origin: @arguments; /* IE 10+ */
@@ -475,29 +473,29 @@ LESS mixins by Chris Krupski
 
 
 .animate-reset() {
-    -webkit-backface-visibility: hidden;
-       -moz-backface-visibility: hidden;
-        -ms-backface-visibility: hidden;
-         -o-backface-visibility: hidden;
-            backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	   -moz-backface-visibility: hidden;
+		-ms-backface-visibility: hidden;
+		 -o-backface-visibility: hidden;
+			backface-visibility: hidden;
 
-    -webkit-transform: translateZ(0);
-       -moz-transform: translateZ(0);
-        -ms-transform: translateZ(0);
-         -o-transform: translateZ(0);
-            transform: translateZ(0);
+	-webkit-transform: translateZ(0);
+	   -moz-transform: translateZ(0);
+		-ms-transform: translateZ(0);
+		 -o-transform: translateZ(0);
+			transform: translateZ(0);
 
-    -webkit-perspective: 1000;
-       -moz-perspective: 1000;
-        -ms-perspective: 1000;
-         -o-perspective: 1000;
-        	perspective: 1000;
+	-webkit-perspective: 1000;
+	   -moz-perspective: 1000;
+		-ms-perspective: 1000;
+		 -o-perspective: 1000;
+			perspective: 1000;
 
-    -webkit-transform-style: preserve-3d;
-       -moz-transform-style: preserve-3d;
-        -ms-transform-style: preserve-3d;
-         -o-transform-style: preserve-3d;
-            transform-style: preserve-3d;
+	-webkit-transform-style: preserve-3d;
+	   -moz-transform-style: preserve-3d;
+		-ms-transform-style: preserve-3d;
+		 -o-transform-style: preserve-3d;
+			transform-style: preserve-3d;
 }
 
 
@@ -509,7 +507,7 @@ LESS mixins by Chris Krupski
 	word-wrap: break-word;
 	-webkit-hyphens: @mode;
 	   -moz-hyphens: @mode;
-	    -ms-hyphens: @mode;
+		-ms-hyphens: @mode;
 		 -o-hyphens: @mode;
 			hyphens: @mode;
 }
@@ -522,29 +520,17 @@ LESS mixins by Chris Krupski
 }
 
 // Center-align a block level element
-.center-block() {
+.center-block {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 }
 
 // IE7 inline-block
-.inline-block() {
+.inline-block {
 	display: inline-block;
 	*display: inline; /* IE7 inline-block hack */
 	*zoom: 1;
-}
-
-.ie7-restore-left-whitespace() {
-	*margin-left: .3em;
-
-	&:first-child {
-		*margin-left: 0;
-	}
-}
-
-.ie7-restore-right-whitespace() {
-	*margin-right: .3em;
 }
 
 // Clearfix, For clearing floats like a boss h5bp.com/q
@@ -558,6 +544,17 @@ LESS mixins by Chris Krupski
 	&:after {
 		clear: both;
 	}
+}
+
+// Clear element
+.clear {
+	.ir;
+	clear: both;
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+	height: 0;
 }
 
 // CSS image replacement, Source: https://github.com/h5bp/html5-boilerplate/commit/aa0396eae757
@@ -584,17 +581,6 @@ LESS mixins by Chris Krupski
 			pointer-events: none;
 }
 
-// Clear element
-.clear {
-	.ir;
-	clear: both;
-	display: block;
-	overflow: hidden;
-	visibility: hidden;
-	width: 0;
-	height: 0;
-}
-
 // Text overflow, Requires inline-block or block for proper styling
 .text-overflow() {
 	overflow: hidden;
@@ -605,10 +591,10 @@ LESS mixins by Chris Krupski
 // Color Placeholder text
 .placeholder-color(@color) {
 	&::-webkit-input-placeholder { color: @color; }
-	&:-moz-placeholder { color: @color; }
-	&:-ms-placeholder { color: @color; }
-	&:-o-placeholder { color: @color; }
-	&:placeholder { color: @color; }
+			  &:-moz-placeholder { color: @color; }
+			   &:-ms-placeholder { color: @color; }
+				&:-o-placeholder { color: @color; }
+				   &:placeholder { color: @color; }
 }
 
 // Sizing shortcuts
@@ -621,11 +607,35 @@ LESS mixins by Chris Krupski
 }
 
 // Positioning shortcuts
+
+// X, Y, Z (Fallback Top, Left IE)
+.position(@x:0, @y:0, @z:0) { 
+	position: absolute;
+	left: 0;
+	top: 0;
+	
+	-webkit-transform: ~"translate3d( @{x}px, @{y}px, @{z}px)";
+	   -moz-transform: ~"translate3d( @{x}px, @{y}px, @{z}px)";
+		-ms-transform: ~"translate3d( @{x}px, @{y}px, @{z}px)";
+		-ms-transform: ~"translate( @{x}px, @{y}px)";
+		 -o-transform: ~"translate3d( @{x}px, @{y}px, @{z}px)";
+			transform: ~"translate3d( @{x}px, @{y}px, @{z}px)";
+
+	.oldie & {
+		left: ~"@{x}px";
+		top: ~"@{y}px";
+	}
+}
+
 .pos(@top: 0, @right: auto, @bottom: auto, @left: 0) {
 	top: @top;
 	bottom: @bottom;
 	left: @left;
 	right: @right;
+}
+.offset(@x: 0, @y: 0){
+	top: @y;
+	left: @x;
 }
 
 // Positioning an element absolute in the center
@@ -636,16 +646,21 @@ LESS mixins by Chris Krupski
 	margin: -@height / 2 0 0 -@width / 2;
 }
 
-/*
-** SAM AND NIGELS MIXINS
-*/
-
-.abs-block {
-	position: absolute;
-	display: block;
+// CSS Background
+.background(@name: @spriteDefault, @repeat: no-repeat, @left: 0, @top: 0, @color: transparent, @position: scroll){
+	background: @color url('@{pathImage}@{name}') @repeat @left @top @position;
 }
 
-.rel-block {
-	position: relative;
-	display: block;
+// Font Face
+.font-face(@fontName, @folderName, @fileName, @fontWeight: normal, @fontStyle: normal){
+	@font-face {
+		font-family: @fontName;
+		src: url('@{fontPath}@{folderName}/@{fileName}.eot');
+		src: url('@{fontPath}@{folderName}/@{fileName}.eot?#iefix') format('embedded-opentype'),
+			 url('@{fontPath}@{folderName}/@{fileName}.woff') format('woff'),
+			 url('@{fontPath}@{folderName}/@{fileName}.ttf') format('truetype'),
+			 url('@{fontPath}@{folderName}/@{fileName}.svg#@{fontName}') format('svg');
+		font-weight: @fontWeight;
+		font-style: @fontStyle;
+	}
 }

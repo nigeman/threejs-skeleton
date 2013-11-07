@@ -1,0 +1,26 @@
+// Icon Functions
+#icon {
+
+	// Default Icon
+	.icn (@width: 16px, @height: 16px) {
+		.inline-block;
+		.size(@width, @height);
+		line-height: @height;
+		font-style: normal;
+		vertical-align: text-top;
+		margin-top: 1px;
+	}
+
+	.image (@width: 16px, @height: 16px, @posX: 0, @posY: 0, @imageSrc: @spriteDefault) {
+		.ir;
+		.icn(@width, @height);
+		.background(@imageSrc, no-repeat, @posX, @posY);
+	}
+
+	.base64 (@src, @width: 16px, @height: 16px, @posX: 0, @posY: 0) {
+		.ir;
+		.icn(@width, @height);
+		background: url('@{src}') no-repeat;
+	}
+	
+}
