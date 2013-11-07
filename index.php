@@ -16,6 +16,7 @@
 <script type="text/javascript" src="inc/js/lib/modernizr.min.js"></script>
 <script type="text/javascript" src="inc/js/lib/jquery.min.js"></script>
 <script type="text/javascript" src="inc/js/lib/three.js"></script>
+<script type="text/javascript" src="inc/js/lib/physi.js"></script>
 
 <script type="text/javascript" src="inc/js/section/page.js"></script>
 <script type="text/javascript" src="inc/js/main.js"></script>
