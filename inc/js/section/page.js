@@ -6,6 +6,9 @@ SITE.Page = (function(){
 		this._eventNameSpace = 'Page';
 		this._eventNameSpace += ++Page.COUNT;
 
+		this.mainScene = null;
+		this.renderer = null;
+
 		this.options = {
 			windowWidth: null,
 			windowHeight: null
@@ -17,8 +20,6 @@ SITE.Page = (function(){
 
 		this.light = null;
 		this.camera = null;
-
-		this.mainScene = null;
 
 		$.extend(this.options, options);
 
@@ -32,17 +33,21 @@ SITE.Page = (function(){
 	Page.prototype = {
 
 		init: function(){
-			var renderer = new THREE.WebGLRenderer();
-			this.mainScene = new THREE.Scene();
+			//Init (Physijs + ammo) Physic Engine
+			Physijs.scripts.worker = 'inc/js/lib/physijs_worker.js';
+			Physijs.scripts.ammo = 'ammo.js';
+
+			this.renderer = new THREE.WebGLRenderer({ antialias: true });
+			this.mainScene = new Physijs.Scene;
+			this.mainScene.setGravity(new THREE.Vector3( 0, -400, 0));
 
 			// set the scene size
 			this.options.width = this.options.$wrapper.width();
 			this.options.height = this.options.$wrapper.height();
-
-			renderer.setSize(this.options.width, this.options.height);
+			this.renderer.setSize(this.options.width, this.options.height);
 
 			// attach the render-supplied DOM element
-			this.options.$wrapper.append(renderer.domElement);
+			this.options.$wrapper.append(this.renderer.domElement);
 
 			// create Camera
 			this.addSceneCamera();
@@ -60,40 +65,64 @@ SITE.Page = (function(){
 			this.addSceneEvents();
 
 			// draw Scene
-			renderer.render(this.mainScene, this.camera);
+			this.renderer.shadowMapEnabled = true;
+			this.renderer.shadowMapSoft = true;
+			this.renderScene(100);
 		},
 
 		addSceneEvents: function(){
 
 		},
 
+		renderScene: function(fps){
+			var _this = this;
+
+			setTimeout(function() {
+				requestAnimationFrame(_this.renderScene.bind(_this));
+				_this.mainScene.simulate();
+				_this.renderer.render(_this.mainScene, _this.camera);
+			}, 1000 / fps);
+		},
+
 		addSceneLight: function(){
-			this.light = new THREE.DirectionalLight( 0xFFFFFF, 2 );
-			this.light.position.x = 10;
+			this.light = new THREE.DirectionalLight(0xFFFFFF, 2);
+			this.light.position.x = 50;
 			this.light.position.y = 50;
-			this.light.position.z = 130;
+			this.light.position.z = 110;
+			this.light.shadowDarkness = 0.5;
+			this.light.castShadow = true;
 
 			this.mainScene.add(this.light);
 		},
 
 		addGeometryMaterials: function(){
-			this.materials.sphere = new THREE.MeshLambertMaterial(
-			{
-				color: 0x03740d
-			});
+			this.materials.sphere = Physijs.createMaterial(
+				new THREE.MeshLambertMaterial(
+				{
+					color: 0x03740d,
+					overdraw: true
+				}),
+				0.6, // medium friction
+				1.1 // bouncy restitution
+			);
 
-			this.materials.plane = new THREE.MeshLambertMaterial(
-			{
-				color: 0xffffff
-			});
+			this.materials.plane = Physijs.createMaterial(
+				new THREE.MeshLambertMaterial(
+				{
+					color: 0xffffff,
+					overdraw: true
+				}),
+				0.6, // medium friction
+				1 // low restitution
+			);
 		},
 
 		addSceneCamera: function(){
 			// Camera Attributes
 			var VIEW_ANGLE = 45,
 				ASPECT = this.options.width  / this.options.height,
-				NEAR = 0.1,
-				FAR = 10000;
+				NEAR = 1,
+				FAR = 5000;
 
 			// Camera Properties
 			this.camera = new THREE.PerspectiveCamera(
@@ -116,19 +145,24 @@ SITE.Page = (function(){
 				RINGS = 16;
 
 			// create a new mesh with sphere geometry -
-			this.geometry.sphere = new THREE.Mesh(
+			this.geometry.sphere = new Physijs.SphereMesh(
 				new THREE.SphereGeometry(RADIUS, SEGMENTS, RINGS),
 				this.materials.sphere);
 
-			this.geometry.plane = new THREE.Mesh(
+			this.geometry.plane = new Physijs.BoxMesh(
 				new THREE.PlaneGeometry(4000, 4000, 122, 122),
 				this.materials.plane);
 
-			//Set Plane orientations
-			this.geometry.plane.rotation.y = 0;
+			//Set Plane properties
+			this.geometry.plane.rotation.y = THREE.Math.degToRad(-0);
 			this.geometry.plane.rotation.x = THREE.Math.degToRad(-90);
 			this.geometry.plane.rotation.z = 0;
 			this.geometry.plane.position.y = -50;
+			this.geometry.plane.receiveShadow = true;
+
+			//Set Sphere properties
+			this.geometry.sphere.position.y = 200;
+			this.geometry.sphere.castShadow = true;
 
 			this.mainScene.add(this.geometry.sphere);
 			this.mainScene.add(this.geometry.plane);
