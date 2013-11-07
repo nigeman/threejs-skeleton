@@ -36,8 +36,8 @@ SITE.Page = (function(){
 			this.mainScene = new THREE.Scene();
 
 			// set the scene size
-			this.options.width = $(window).width();
-			this.options.height = $(window).height();
+			this.options.width = this.options.$wrapper.width();
+			this.options.height = this.options.$wrapper.height();
 
 			renderer.setSize(this.options.width, this.options.height);
 
