@@ -455,6 +455,10 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+canvas {
+  padding: 0;
+  margin: 0;
+}
 /* Default variables and mixins
 --------------------------------------------------------------*/
 /* MediaMonks Less Library */
@@ -601,11 +605,12 @@ body {
   height: 100%;
 }
 #container {
-  background: #000;
+  background: #222;
   width: 100%;
   height: 100%;
-  margin: 0;
-  padding: 0;
+}
+canvas {
+  display: block;
 }
 /* Components
 --------------------------------------------------------------*/
