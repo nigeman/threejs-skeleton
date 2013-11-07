@@ -11,7 +11,7 @@
 <!-- hi nigel -->
 <title>Three.js - Skeleton Project</title>
 
-<link rel="stylesheet" type="text/css" href="inc/less/style.css">
+<link rel="stylesheet" type="text/css" href="inc/css/style.css">
 
 <script type="text/javascript" src="inc/js/lib/modernizr.min.js"></script>
 <script type="text/javascript" src="inc/js/lib/jquery.min.js"></script>
